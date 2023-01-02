@@ -77,39 +77,42 @@ Pattern builder:\
 L am folosit pentru a construi action, fiind cea mai vasta clasa ,majoritatea putand fi nule
 
 
-Clasa recommandation\
+Clasa recommandation
+
 *Fiecare user are un camp recomandations, in care stocam un vector de filme recomandate \
 si un database de tipul GenreDatabase
 
 Clasa genreDatabase\
-Aici stocam un vector de genreStatus numit top, si cele x-genuri de filme. Clasa genreStatus\
-stocheaza numele genului si numarul de likeuri pe care le are de la userul in care ne aflam.\
+Aici stocam un vector de genreStatus numit top, si cele x-genuri de filme. 
 
-Gandim asa:\
+Clasa genreStatus\
+stocheaza numele genului si numarul de likeuri pe care le are de la userul in care ne aflam.
 
-*Se stocheaza un database cu genurile, si topul lor pentru user.-> la fiecare like,actualizam \
-baza de date,implicit recomandarile.\
+Gandim asa:
 
-*In GenreDatabase se ordoneaza genurile dupa numarul de likeuri de la user,apoi lexicografic\
+*Se stocheaza un database cu genurile, si topul lor pentru user.-> la fiecare like,actualizam\
+baza de date,implicit recomandarile.
+
+*In GenreDatabase se ordoneaza genurile dupa numarul de likeuri de la user,apoi lexicografic
 
 *In clasa recommendation, luam filmele disponibile, le scoatem pe cele deja vizionate, le ordonam\
 dupa numarul de likeuri, apoi le incarcam in vectorul recommendations, conform ordinei genurilor\
-din vectorul top.\
+din vectorul top.
 
 Am ales acest tip de implementare pentru ca:\
 1.fiecare user are facute recomandarile in spate, insa cel standard nu le poate accesa.Astfel\
 daca un user face trecerea de la standard la premium,poate vizualiza filmele recomandate in \
-functie de tot istoricul ,nu doar de “acum incolo”\
+functie de tot istoricul ,nu doar de “acum incolo”
 
-2.sortarea se face foarte simplu fara sa retinem intern alte lucruri\
+2.sortarea se face foarte simplu fara sa retinem intern alte lucruri
 
 3.cand userul vede filmul recomandat, se trece automat la urmatorul, pentru ca le avem salvate\
-in vectorul de recomandari, nu e doar o instanta ce trebuie calculata la fiecare modificare\
+in vectorul de recomandari, nu e doar o instanta ce trebuie calculata la fiecare modificare
 
 4.aceasta structura se modifica doar cand apar actiuni ce ar modifica ordinea, nu se recalculeaza\
-de fiecare data cand avem nevoie de ea.\
+de fiecare data cand avem nevoie de ea.
 
-Back\
+Back
 
 Pentru etapa 1 am considerat ca implementarea ierarhiei de pagini sub forma de arbore e cea mai
 generica.\
@@ -117,7 +120,7 @@ Asta m a ajutat enorm de mult pentru aceasta bucata. Am facut o stiva ce retine 
 am fost si pentru fiecare “change page” fac un push, iar pentru fiecare back,un pop.\
 Aceasta stiva este retinuta in ierarhie,deoarece doar cand vreau sa modific pozitia curenta am\
 nevoie de ea.\
-Dupa care pur si simplu ma mut pe pagina de care am nevoie.\
+Dupa care pur si simplu ma mut pe pagina de care am nevoie.
 
 Obs: daca back ar fi functionat pe principiul “ne intoarcem pe pagina parinte”, in implementarea cu \
-arbore, se rezolva in maxim 2 linii de cod.\
+arbore, se rezolva in maxim 2 linii de cod.
