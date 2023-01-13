@@ -76,6 +76,9 @@ notificari a acestuia. Il compensam apoi pe user in functie de tipul contului.
 Pattern builder:\
 L am folosit pentru a construi action, fiind cea mai vasta clasa ,majoritatea putand fi nule
 
+Pattern strategy:\
+L-am folosit pentru a efectua tipurile diferite de actiuni (on page, change page, back,\
+database) in functie de tipul lor, alegand la runtime algoritmul necesar fiecareia.\
 
 Clasa recommandation
 

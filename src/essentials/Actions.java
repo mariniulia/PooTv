@@ -173,58 +173,23 @@ public final class Actions {
      * verificam tipul actiunii si o efectuam
      */
     public void start() {
+        Context context = new Context();
         if (this.type.compareTo("change page") == 0) {
-            changePage();
+            context.setStrategy(new Strategy.ChangePage());
         } else if (this.type.compareTo("on page") == 0) {
-            onPage();
+            context.setStrategy(new Strategy.OnPage());
         } else if (this.type.compareTo("database") == 0) {
-            database();
+            context.setStrategy(new Strategy.Database());
         } else if (this.type.compareTo("back") == 0) {
-            back();
+            context.setStrategy(new Strategy.Back());
         }
-    }
-
-    /**
-     * back action
-     */
-    private void back() {
-        ArrayList<Tree.Node> history = CurrentPlatform.getInstance().getHierarchy().history;
-
-        //verifica daca e conectat user
-        if (CurrentPlatform.getInstance().getCurrentUser() == null) {
-            setError();
-            return;
-        }
-
-        //verificam paginile de pe care nu putem da back
-        String lastPageName = history.get(history.size() - 1).data.getName();
-        if (lastPageName.compareTo("login") == 0 || lastPageName.compareTo("register") == 0
-                || lastPageName.compareTo("autentificat") == 0) {
-            setError();
-            return;
-        }
-
-        //verificam stiva sa nu fie goala
-        if (history.size() == 0) {
-            setError();
-            return;
-        }
-
-        //ne mutam inapoi
-        CurrentPlatform.getInstance().getHierarchy().changeBack();
-
-        //pregatim pagina noua
-        Tree.Node currentPage = CurrentPlatform.getInstance().getHierarchy().currentPage;
-        if (currentPage.data.getName().compareTo("movies") == 0) {
-            CurrentPlatform.getInstance().getAvailableMovies();
-            hasOutput = true;
-        }
+        context.executeStrategy(this);
     }
 
     /**
      * subscribe action
      */
-    private void subscribe() {
+    void subscribe() {
         User user = CurrentPlatform.getInstance().getCurrentUser();
         ArrayList<Movie> movies = CurrentPlatform.getInstance().getCurrentMoviesList();
         Tree.Node currentPage = CurrentPlatform.getInstance().getHierarchy().currentPage;
@@ -251,26 +216,9 @@ public final class Actions {
     }
 
     /**
-     * database actions
-     */
-    private void database() {
-        switch (feature) {
-            case "add" -> {
-                databaseAdd();
-            }
-            case "delete" -> {
-                databaseDelete();
-            }
-            default -> {
-                return;
-            }
-        }
-    }
-
-    /**
      * deletes movie from database
      */
-    private void databaseDelete() {
+    void databaseDelete() {
         //verificam daca exista filmul cautat
         if (CurrentPlatform.getInstance().getPlatformMovies().stream().
                 noneMatch(e -> e.getName().compareTo(deletedMovie) == 0)) {
@@ -290,7 +238,7 @@ public final class Actions {
     /**
      * adds movie in database
      */
-    private void databaseAdd() {
+    void databaseAdd() {
         //verificam daca exista deja film cu acelasi nume
         if (CurrentPlatform.getInstance().getPlatformMovies().stream()
                 .anyMatch(e -> e.getName().compareTo(addedMovie.getName()) == 0)) {
@@ -326,7 +274,7 @@ public final class Actions {
     /**
      * sets error for output
      */
-    private void setError() {
+    void setError() {
         CurrentPlatform.getInstance().setError("Error");
         CurrentPlatform.getInstance().getCurrentMoviesList().clear();
         hasOutput = true;
@@ -358,6 +306,9 @@ public final class Actions {
             case "Mystery" -> {
                 return Mystery.getInstance();
             }
+            case "Mistery" -> {
+                return Mistery.getInstance();
+            }
             case "Fantasy" -> {
                 return Fantasy.getInstance();
             }
@@ -374,52 +325,9 @@ public final class Actions {
     }
 
     /**
-     * efectuam feature-ul dat
+     * verificam daca s a dat like
      */
-    private void onPage() {
-        switch (feature) {
-            case "login" -> {
-                checkLogin();
-            }
-            case "register" -> {
-                checkRegister();
-            }
-            case "search" -> {
-                checkSearch();
-            }
-            case "filter" -> {
-                checkFilter();
-            }
-            case "buy tokens" -> {
-                checkBuy();
-            }
-            case "buy premium account" -> {
-                checkBuyPremium();
-            }
-            case "purchase" -> {
-                checkPurchase();
-
-            }
-            case "watch" -> {
-                checkWatch();
-
-            }
-            case "like" -> {
-                checkLike(CurrentPlatform.getInstance().like() == 1);
-
-            }
-            case "rate" -> {
-                checkLike(CurrentPlatform.getInstance().rate(rate) == 1);
-            }
-            case "subscribe" -> {
-                subscribe();
-            }
-            default -> {
-            }
-        }
-    }
-
-    private void checkLike(final boolean x) {
+    void checkLike(final boolean x) {
         //verificam ca suntem pe pagina corespunzatoare
         if (cantDoThisHere("see details")) {
             CurrentPlatform.getInstance().getCurrentMoviesList().clear();
@@ -433,7 +341,7 @@ public final class Actions {
         hasOutput = true;
     }
 
-    private void checkWatch() {
+    void checkWatch() {
         //verificam ca suntem pe pagina corespunzatoare
         if (cantDoThisHere("see details")) {
             CurrentPlatform.getInstance().getCurrentMoviesList().clear();
@@ -448,7 +356,7 @@ public final class Actions {
         }
     }
 
-    private void checkPurchase() {
+    void checkPurchase() {
         //verificam ca suntem pe pagina corespunzatoare
         if (cantDoThisHere("see details")) {
             CurrentPlatform.getInstance().getCurrentMoviesList().clear();
@@ -466,7 +374,7 @@ public final class Actions {
         hasOutput = true;
     }
 
-    private void checkBuyPremium() {
+    void checkBuyPremium() {
         //verificam ca suntem pe pagina corespunzatoare
         if (cantDoThisHere("upgrades")) {
             return;
@@ -474,7 +382,7 @@ public final class Actions {
         CurrentPlatform.getInstance().buyPremiumAccount();
     }
 
-    private void checkBuy() {
+    void checkBuy() {
         //verificam ca suntem pe pagina corespunzatoare
         if (cantDoThisHere("upgrades")) {
             return;
@@ -482,7 +390,7 @@ public final class Actions {
         CurrentPlatform.getInstance().buyTokens(count);
     }
 
-    private void checkFilter() {
+    void checkFilter() {
         //verificam ca suntem pe pagina corespunzatoare
         if (cantDoThisHere("movies")) {
             return;
@@ -492,7 +400,7 @@ public final class Actions {
         hasOutput = true;
     }
 
-    private void checkSearch() {
+    void checkSearch() {
         //verificam ca suntem pe pagina corespunzatoare
         if (cantDoThisHere("movies")) {
             return;
@@ -501,7 +409,7 @@ public final class Actions {
         hasOutput = true;
     }
 
-    private void checkRegister() {
+    void checkRegister() {
         //verificam ca suntem pe pagina corespunzatoare
         if (cantDoThisHere("register")) {
             return;
@@ -509,7 +417,7 @@ public final class Actions {
         register();
     }
 
-    private void checkLogin() {
+    public void checkLogin() {
         //verificam ca suntem pe pagina corespunzatoare
         if (cantDoThisHere("login")) {
             return;
@@ -570,9 +478,9 @@ public final class Actions {
     }
 
     /**
-     * preagatim platfoma pentru movies si seeDetails
+     * pregatim platfoma pentru movies si seeDetails
      */
-    private void preparePages() {
+    public void preparePages() {
         if (page.compareTo("movies") == 0) {
             prepareMoviesPage();
         } else if (page.compareTo("see details") == 0) {
@@ -607,7 +515,7 @@ public final class Actions {
     /**
      * facem logout daca e necesar
      */
-    private static void checkLogout() {
+    static void checkLogout() {
         if (CurrentPlatform.getInstance().getHierarchy().currentPage.data
                 .getName().compareTo("logout") == 0) {
             CurrentPlatform.getInstance().getHierarchy().currentPage
@@ -674,5 +582,13 @@ public final class Actions {
 
     public void setCredentials(final Credentials credentials) {
         this.credentials = credentials;
+    }
+
+    public void setHasOutput(boolean hasOutput) {
+        this.hasOutput = hasOutput;
+    }
+
+    public Integer getRate() {
+        return rate;
     }
 }
