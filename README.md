@@ -60,7 +60,7 @@ actiunea din nodul in care ne alfam.
 metodele "prepareMoviesPage" si "prepareSeeDetailsPage", deoarece in functie de\
 erori afisam sau nu lista de filme sau filmul selectat.
 
-# Functionalitate:
+# Design:
 Pattern observer:\
 Am considerat fiecare user un observer care se poate abona prin subscribe la genuri de filme,\
 pe care le am implementat drept clase extinse de la subject.\
@@ -76,6 +76,7 @@ Pattern strategy:\
 L-am folosit pentru a efectua tipurile diferite de actiuni (on page, change page, back,\
 database) in functie de tipul lor, alegand la runtime algoritmul necesar fiecareia.\
 
+# Algoritm recomandari
 Clasa recommandation
 
 *Fiecare user are un camp recomandations, in care stocam un vector de filme recomandate \
@@ -111,7 +112,7 @@ in vectorul de recomandari, nu e doar o instanta ce trebuie calculata la fiecare
 4.aceasta structura se modifica doar cand apar actiuni ce ar modifica ordinea, nu se recalculeaza\
 de fiecare data cand avem nevoie de ea.
 
-Back
+# Navigare Pagini
 
 Pentru etapa 1 am considerat ca implementarea ierarhiei de pagini sub forma de arbore e cea mai
 generica.\
