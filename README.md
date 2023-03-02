@@ -1,8 +1,6 @@
 
-# Etpa 2 - Proiect POO -
 #    POOTv
 nume:Marin Iulia-Alina\
-grupa:321CA
 link to git repo: https://github.com/mariniulia/Proiect1_PooTv.git
 
 # Implementari interesante
@@ -62,8 +60,6 @@ actiunea din nodul in care ne alfam.
 metodele "prepareMoviesPage" si "prepareSeeDetailsPage", deoarece in functie de\
 erori afisam sau nu lista de filme sau filmul selectat.
 
-
-## ! Etapa 2 !
 # Functionalitate:
 Pattern observer:\
 Am considerat fiecare user un observer care se poate abona prin subscribe la genuri de filme,\
